@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
 namespace Instacult.Controllers
 {
     [ApiController]
@@ -11,14 +5,13 @@ namespace Instacult.Controllers
     public class CultsController : ControllerBase
     {
         private readonly CultsService _cultsService;
+        private readonly CultMembersService _cultMembersService;
         private readonly Auth0Provider _a0;
-        private readonly CultistService _cultistService;
 
-        public CultsController(CultsService cultsService, Auth0Provider a0, CultistService cultistService)
+        public CultsController(CultsService cultsService, Auth0Provider a0)
         {
             _cultsService = cultsService;
             _a0 = a0;
-            _cultistService = cultistService;
         }
 
         [HttpGet]
@@ -73,7 +66,7 @@ namespace Instacult.Controllers
         {
             try
             {
-                List<Cultist> cultists = _cultistService.GetCultist(cultId);
+                List<Cultist> cultists = _cultMembersService.GetCultist(cultId);
                 return Ok(cultists);
             }
             catch (Exception e)

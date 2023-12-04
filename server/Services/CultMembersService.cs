@@ -49,5 +49,12 @@ namespace Instacult.Services
             _cultsService.UpdateMemberCount(cult);
             return "You might be free, we'll see about that!";
         }
+
+        internal List<Cultist> GetCultist(int cultId)
+        {
+            Cult cult = _cultsService.GetCultById(cultId);
+            List<Cultist> cultists = _cultMembersRepo.GetCultist(cultId);
+            return cultists;
+        }
     }
 }
