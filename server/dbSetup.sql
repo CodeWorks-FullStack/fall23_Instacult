@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS cultMembers(
   accountId VARCHAR(255) NOT NULL,
   cultId INT NOT NULL,
   Foreign Key (accountId) REFERENCES accounts(id) ON DELETE CASCADE,
-  Foreign Key (cultId) REFERENCES cults(id) ON DELETE CASCADE
+  Foreign Key (cultId) REFERENCES cults(id) ON DELETE CASCADE,
+  UNIQUE(accountId, cultId)
 ) default charset utf8;
 
 DROP TABLE `cultMembers`

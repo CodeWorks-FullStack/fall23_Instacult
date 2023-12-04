@@ -72,5 +72,34 @@ namespace Instacult.Repositories
             return cult;
 
         }
+
+        internal Cult UpdateCult(Cult cultData)
+        {
+            string sql = @"
+            UPDATE cults
+            SET
+            name = @Name,
+            description = @Description,
+            coverImg = @CoverImg,
+            fee = @Fee,
+            invitationRequired = @InvitationRequired,
+            memberCount = @MemberCount
+            WHERE id = @Id;
+
+            SELECT 
+            cults.*,
+            accounts.*
+            FROM cults
+            JOIN accounts ON accounts.id = cults.leaderId
+            WHERE cults.id = @Id
+            ;";
+
+            Cult cult = _db.Query<Cult, Profile, Cult>(sql, (cult, profile) =>
+            {
+                cult.Leader = profile;
+                return cult;
+            }, cultData).FirstOrDefault();
+            return cult;
+        }
     }
 }

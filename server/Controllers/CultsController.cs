@@ -12,19 +12,22 @@ namespace Instacult.Controllers
     {
         private readonly CultsService _cultsService;
         private readonly Auth0Provider _a0;
+        private readonly CultistService _cultistService;
 
-        public CultsController(CultsService cultsService, Auth0Provider a0)
+        public CultsController(CultsService cultsService, Auth0Provider a0, CultistService cultistService)
         {
             _cultsService = cultsService;
             _a0 = a0;
+            _cultistService = cultistService;
         }
 
         [HttpGet]
-        public ActionResult<List<Cult>> GetAllCults()
+        public async Task<ActionResult<List<Cult>>> GetAllCults()
         {
             try
             {
-                List<Cult> cults = _cultsService.GetAllCults();
+                Account userInfo = await _a0.GetUserInfoAsync<Account>(HttpContext);
+                List<Cult> cults = _cultsService.GetAllCults(userInfo?.Id);
                 return Ok(cults);
             }
             catch (Exception e)
@@ -58,6 +61,20 @@ namespace Instacult.Controllers
             {
                 Cult cult = _cultsService.GetCultById(cultId);
                 return Ok(cult);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{cultId}/cultMembers")]
+        public ActionResult<List<Cultist>> GetCultist(int cultId)
+        {
+            try
+            {
+                List<Cultist> cultists = _cultistService.GetCultist(cultId);
+                return Ok(cultists);
             }
             catch (Exception e)
             {

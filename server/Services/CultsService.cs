@@ -20,10 +20,11 @@ namespace Instacult.Services
             return cult;
         }
 
-        internal List<Cult> GetAllCults()
+        internal List<Cult> GetAllCults(string userId)
         {
             List<Cult> cults = _cultsRepo.GetAllCults();
-            return cults;
+            List<Cult> filteredCults = cults.FindAll((cult) => cult.InvitationRequired == false || cult.LeaderId == userId);
+            return filteredCults;
         }
 
         internal Cult GetCultById(int cultId)
@@ -33,6 +34,12 @@ namespace Instacult.Services
             {
                 throw new Exception($"There was not a cult at [ID] {cultId}");
             }
+            return cult;
+        }
+
+        internal Cult UpdateMemberCount(Cult cultData)
+        {
+            Cult cult = _cultsRepo.UpdateCult(cultData);
             return cult;
         }
     }
