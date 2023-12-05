@@ -8,19 +8,20 @@ namespace Instacult.Controllers
         private readonly CultMembersService _cultMembersService;
         private readonly Auth0Provider _a0;
 
-        public CultsController(CultsService cultsService, Auth0Provider a0)
+        public CultsController(CultsService cultsService, Auth0Provider a0, CultMembersService cultMembersService)
         {
             _cultsService = cultsService;
             _a0 = a0;
+            _cultMembersService = cultMembersService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Cult>>> GetAllCults()
+        public async Task<ActionResult<List<Cult>>> GetAllCults(string query)
         {
             try
             {
                 Account userInfo = await _a0.GetUserInfoAsync<Account>(HttpContext);
-                List<Cult> cults = _cultsService.GetAllCults(userInfo?.Id);
+                List<Cult> cults = _cultsService.GetAllCults(userInfo?.Id, offset);
                 return Ok(cults);
             }
             catch (Exception e)

@@ -37,20 +37,22 @@ namespace Instacult.Repositories
             return cult;
         }
 
-        internal List<Cult> GetAllCults()
+        internal List<Cult> GetAllCults(string query)
         {
+            query = "%" + query + "%";
             string sql = @"
             SELECT
             cults.*,
             accounts.*
             FROM cults
             JOIN accounts ON accounts.id = cults.leaderId
+            WHERE name LIKE @query
             ;";
             List<Cult> cults = _db.Query<Cult, Profile, Cult>(sql, (cult, profile) =>
            {
                cult.Leader = profile;
                return cult;
-           }).ToList();
+           }, new { offset }).ToList();
             return cults;
         }
 

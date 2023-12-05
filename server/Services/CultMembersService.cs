@@ -40,7 +40,7 @@ namespace Instacult.Services
         {
             CultMember cultMember = GetById(cultMemberId);
             Cult cult = _cultsService.GetCultById(cultMember.CultId);
-            if (cult.LeaderId != userId)
+            if (cultMember.AccountId != userId)
             {
                 throw new Exception("Stay a little longer....");
             }

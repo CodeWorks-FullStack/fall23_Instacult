@@ -60,7 +60,9 @@ namespace Instacult.Repositories
 
         internal List<Cultist> GetCultist(int cultId)
         {
-            string sql = @"
+            try
+            {
+                string sql = @"
             SELECT
             cultMembers.*,
             accounts.*
@@ -68,13 +70,20 @@ namespace Instacult.Repositories
             JOIN accounts ON cultMembers.accountId = accounts.id
             WHERE cultMembers.cultId = @cultId
             ;";
-            List<Cultist> cultists = _db.Query<CultMember, Cultist, Cultist>(sql, (cultMember, cultist) =>
+                List<Cultist> cultists = _db.Query<CultMember, Cultist, Cultist>(sql, (cultMember, cultist) =>
+                {
+                    cultist.CultMemberId = cultMember.Id;
+                    cultist.CultId = cultMember.CultId;
+                    return cultist;
+                }, new { cultId }).ToList();
+                return cultists;
+
+            }
+            catch (Exception e)
             {
-                cultist.CultMemberId = cultMember.Id;
-                cultist.CultId = cultMember.CultId;
-                return cultist;
-            }, new { cultId }).ToList();
-            return cultists;
+                throw e;
+            }
+
         }
     }
 }

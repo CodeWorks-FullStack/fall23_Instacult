@@ -1,43 +1,80 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 card align-items-center shadow rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo"
-        class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+
+<!-- SECTION TOP OF HOME PAGE -->
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center text-center cult-bg">
+    <div class="col-3">
+      <button @click="scrollTo" class="btn btn-danger w-100">Join a Cult?</button>
+    </div>
+    <div class="col-3">
+      <button data-bs-toggle="modal" data-bs-target="#createCultModal" class="btn btn-danger w-100">Start a Cult?</button>
     </div>
   </div>
+</div>
+
+<!-- SECTION CULTS -->
+<div class="container">
+  <div class="row mt-5">
+    <div id="cults" class="col-4 text-center">
+      <p class="fs-1 text-white border-top">Cults near you!</p>
+    </div>
+    <div v-for="cult in cults" :key="cult.id" class="col-12 col-md-6 offset-md-3 my-3 p-3">
+      <Cult :cultProp="cult" />
+    </div>
+  </div>
+</div>
+
 </template>
 
 <script>
+import { computed, onMounted } from 'vue';
+import Pop from '../utils/Pop.js';
+import { logger } from '../utils/Logger.js';
+import {cultsService} from '../services/CultsService.js'
+import {AppState} from '../AppState.js'
+import Cult from '../components/Cult.vue';
+
 export default {
-  setup() {
-    return {
-      
-    }
-  }
+    setup() {
+        onMounted(() => {
+            getCults();
+        });
+        async function getCults() {
+            try {
+                await cultsService.getCults();
+            }
+            catch (error) {
+                logger.error('[ERROR]', error);
+                Pop.error(('[ERROR]'), error.message);
+            }
+        }
+        return {
+            cults: computed(() => AppState.cults),
+
+            scrollTo() {
+              const cultElem = document.getElementById('cults')
+              const cult = cultElem.offsetTop
+              window.scrollTo(0,cult)
+            }
+        };
+    },
+    components: { Cult }
 }
 </script>
 
 <style scoped lang="scss">
-.home {
-  display: grid;
-  height: 80vh;
-  place-content: center;
-  text-align: center;
-  user-select: none;
 
-  .home-card {
-    width: clamp(500px, 50vw, 100%);
-
-    >img {
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-  }
+.cult-bg {
+  background-image: url(../assets/img/forest.png);
+  height: 100dvh;
+  background-size: cover;
+  background-position: center;
 }
+
+.border-top {
+  border-top: 2px white solid;
+}
+
+
+
 </style>
