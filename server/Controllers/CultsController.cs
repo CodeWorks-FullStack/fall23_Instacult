@@ -21,7 +21,7 @@ namespace Instacult.Controllers
             try
             {
                 Account userInfo = await _a0.GetUserInfoAsync<Account>(HttpContext);
-                List<Cult> cults = _cultsService.GetAllCults(userInfo?.Id, offset);
+                List<Cult> cults = _cultsService.GetAllCults(userInfo?.Id, query);
                 return Ok(cults);
             }
             catch (Exception e)

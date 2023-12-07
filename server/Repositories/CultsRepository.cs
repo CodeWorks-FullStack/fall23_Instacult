@@ -46,13 +46,13 @@ namespace Instacult.Repositories
             accounts.*
             FROM cults
             JOIN accounts ON accounts.id = cults.leaderId
-            WHERE name LIKE @query
+            WHERE cults.name LIKE @query
             ;";
             List<Cult> cults = _db.Query<Cult, Profile, Cult>(sql, (cult, profile) =>
            {
                cult.Leader = profile;
                return cult;
-           }, new { offset }).ToList();
+           }, new { query }).ToList();
             return cults;
         }
 

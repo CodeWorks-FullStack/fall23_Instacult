@@ -1,5 +1,6 @@
 <template>
 
+
 <!-- SECTION TOP OF HOME PAGE -->
 <div class="container-fluid">
   <div class="row align-items-center justify-content-center text-center cult-bg">

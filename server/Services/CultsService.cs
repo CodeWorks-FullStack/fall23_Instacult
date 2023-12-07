@@ -20,9 +20,9 @@ namespace Instacult.Services
             return cult;
         }
 
-        internal List<Cult> GetAllCults(string userId)
+        internal List<Cult> GetAllCults(string userId, string query)
         {
-            List<Cult> cults = _cultsRepo.GetAllCults();
+            List<Cult> cults = _cultsRepo.GetAllCults(query);
             List<Cult> filteredCults = cults.FindAll((cult) => cult.InvitationRequired == false || cult.LeaderId == userId);
             return filteredCults;
         }
